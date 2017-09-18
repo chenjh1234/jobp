@@ -1,0 +1,20 @@
+ <RCC>
+     <qresource prefix="/" >
+         <file>images/flowback.jpg</file>
+	 <file>images/flowback1.png</file>
+	 <file>images/flowback1.bmp</file>
+	 <file>images/cut.png</file>
+	 <file>images/textflow.png</file>
+	 <file>images/new.png</file>
+	 <file>images/open.png</file>
+	 <file>images/save.png</file>
+	 <file>images/run.png</file>
+	 <file>images/submit.png</file>
+	 <file>images/constant.png</file>
+	 <file>images/help.png</file>
+	 <file>images/up.png</file>
+	 <file>images/down.png</file>
+	 <file>images/del.png</file>
+	 <file>images/about.png</file>
+     </qresource>
+ </RCC>
