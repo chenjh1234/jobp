@@ -67,6 +67,7 @@ private:
     void setCurrentFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);
     void setTitle();
+    QMap<QString,QStringList> getModParaDV(QString modname);
 
    // QPlainTextEdit *textEdit;
     QSplitter *split;
@@ -140,6 +141,7 @@ public slots:
     void slotShowParam(flowNode*);
     void slotRemoveParam(flowNode*);
     void slotParam2Str();
+    void slotParam2Str1();
     void slotRun();
     void slotSubmit();
     void slotConstant();
@@ -156,8 +158,10 @@ public:
     QList<run *> m_listRun;
 private:
     QList<paramWin *> m_listParam;
+    QMap<QString,QMap<QString,QStringList> > mapModPV;
     
-    void param2Str();
+    //void param2Str();
+ 
     paramWin * findParamView(int idx);
     void setParamData();
     int m_w,m_h;

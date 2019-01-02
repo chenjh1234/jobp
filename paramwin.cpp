@@ -240,7 +240,7 @@ int paramWin::createProperty(csParamDef *pDef)
                  }
 
                  //vv ="";
-                 if (!vv.isValid())
+                 if (vv.isValid())
                      m_mng->setValue(pt0,vv.toString());
                  break;
             }            

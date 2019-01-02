@@ -249,15 +249,71 @@ void MainWindow::slotRemoveParam(flowNode *node)
     }
  
 }
+QMap<QString,QStringList> MainWindow::getModParaDV(QString mname)
+{
+    QMap<QString,QStringList> mapModP;
+    string s;
+    s = mname.toUtf8().data();
+    DOC->m_modIfo.setModule(s);
+    csParamDef *pDef = DOC->m_modIfo.getPDef();
+    Q_CHECK_PTR(pDef);
+
+    csParamDef *pdef;
+    QString name,vname,pdesc,vdesc,disName,modname,str;
+    QStringList strList;
+    QVariant vv;
+    int nOptions;
+    pdef = pDef;
+
+    csParamDescription const* const module = pdef->module();
+    if (module == NULL)
+    {
+        str = QString(" No this module: ") + name;
+        QMessageBox::warning(this,"error",str);
+        mapModP;
+    }
+
+    modname = module->name();
+    int nParams = pdef->numParameters();
+    qDebug() <<"number of P ="<< nParams;
+
+    csParamDescription const* valueDescriptor;
+    csParamDescription const* optionDescriptor;
+// loop Param:
+    for( int ip = 0; ip < nParams; ip++ ) 
+    {
+        name = pdef-> param(ip)->name();
+        pdesc = pdef-> param(ip)->desc();
+        int nValues = pdef->numValues(ip);
+        strList.clear();
+        //loop of values:
+        for( int iv = 0; iv < nValues; iv++ ) 
+        {
+            vname = "";
+            valueDescriptor = pdef->value(ip,iv);
+            if( strlen(valueDescriptor->name()) != 0 ) 
+                vname = valueDescriptor->name();            
+#if 1
+            qDebug() << "value name = " <<   valueDescriptor->name();
+            qDebug() << "value type = " <<   valueDescriptor->type();
+            qDebug() << "value desc = " <<   valueDescriptor->desc();
+            qDebug() << "value descE = " <<   valueDescriptor->descExtra(); 
+#endif 
+            strList << vname;
+        }//end of value;
+        mapModP[name] = strList;   
+    }  // end of param  
+    return mapModP;
+}
 void MainWindow::slotCreateParam(flowNode *node)
 {
        //qDebug() << "slot in paramWin,mod= " << s;        
     string s;
     QString name;
-    
-     
     s=node->getName();
     name = s.c_str();
+    mapModPV[name] = getModParaDV(name);
+    qDebug()<<"moddv = "<<name<<mapModPV[name];
 
     DOC->m_modIfo.setModule(s);
     csParamDef *pDef = DOC->m_modIfo.getPDef();
@@ -1016,7 +1072,7 @@ QString MainWindow::strippedName(const QString &fullFileName)
     return QFileInfo(fullFileName).fileName();
 }
 
-void MainWindow::slotParam2Str()
+void MainWindow::slotParam2Str1()
 {
     int i,num,pnum,vnum;
     QString str,param,mod,flow,val,defstr,pname,mname;
@@ -1114,6 +1170,140 @@ void MainWindow::slotParam2Str()
                 mod += param;
             }
             
+        }
+        //pnum = param->
+        flow += mod;
+    }
+    //flowTView->setText(flow);
+    theApp->m_doc->m_flowText = flow;
+    return ;
+}
+ 
+void MainWindow::slotParam2Str()
+{
+    int i,num,pnum,vnum;
+    QString str,param,mod,flow,val,defstr,pname,mname;
+    QStringList vlist,slist;
+    str = param = mod=flow = "";
+    // def:
+    i = 0;
+    QString q1,q2,q3;
+    defstr = "";
+    while (i<MAX_DEFINES)
+    {
+        defineView->getText(i,q1,q2,q3);
+        qDebug()<< "q2 = " <<q2;
+        i++;
+        if (q2.length() == 0) break;
+        defstr += q1 + " " + q2 +" " + q3 + "\n";
+    }
+    qDebug()<< "defstr = " <<defstr;
+
+    flow = defstr;
+    paramWin *paramw; 
+    QList<QtProperty *> listp,listsp;
+    QtProperty *pt,*spt;
+    //num: number of modules in flow
+    num = m_listParam.size();
+    theApp->m_doc->m_inputData = "";
+    theApp->m_doc->m_outputData = "";
+    // modules loop:
+    
+    for (i = 0; i <num ; i++)
+    {
+         
+        //paramw = m_listParam[i];
+        paramw = findParamView(i);
+        if (paramw == NULL) break;
+        listp = paramw->properties ();
+        pnum = listp.size();
+        qDebug() << "model index =" << i << " modname ="<< paramw->m_name;
+        //pnum :number of params in th module;
+        //2015.6.24: modname must be uppercase
+        mod = "$"+paramw->m_name.toUpper() + "\n";
+        mname = paramw->m_name;
+       
+        
+        for (int pi = 0; pi < pnum ;pi++) 
+        {
+            pt = listp[pi];
+            if (pt ==NULL) break; 
+            qDebug() << "param index =" << pi << " paramname =" << pt->propertyName();
+            qDebug() << "value 0 = " << pt->valueText();
+            val = "";
+            pname = pt->propertyName();
+            if (pt->propertyName() == "filename") 
+            {
+                if (i == 0) // first module
+                {
+                    theApp->m_doc->m_inputData = pt->valueText();
+                }
+                 if (i == num -1) //last module
+                {
+                    theApp->m_doc->m_outputData = pt->valueText();
+                }
+            }
+
+            vlist.clear();
+
+            if (pt->valueText().length() != 0)  val = pt->valueText();
+
+            //vlist  = getParamDV(mnane,pname)
+            vlist << val;
+
+#if 0
+             param = " " + pname; 
+
+             if (param.size() < STARTV -1)  
+                param.insert(STARTV, val); 
+            else
+                param.append(" " + val);
+#endif
+
+            listsp = pt->subProperties();
+            //vnum :number of values in the parameter:
+            vnum = listsp.size();
+            qDebug() << "num of vnum = "<<vnum;
+            for (int vi = 0; vi < vnum; vi ++) 
+            {
+                spt = listsp[vi];
+                if (spt == NULL) break;
+                qDebug() << "value " << vi << " =" << spt->valueText();
+                val = spt->valueText();
+                vlist << val;
+#if 0
+                if (spt->valueText().length() != 0)  val += spt->valueText();
+
+                if (spt->valueText().length() !=0)  
+                    param.append(" " + spt->valueText()); 
+#endif
+            }// endof v
+            #if 0
+            if (val.length()>0) 
+            {
+                param.append("\n"); 
+                mod += param;
+            }
+            #endif
+            slist = mapModPV[mname][pname];
+            if (slist == vlist) 
+            {
+                qDebug()<<"omit param = "<<mname<<pname<<vlist;
+                continue;
+            }
+
+            param = " " + pname; 
+            val = vlist.join(" ");
+
+
+            if (param.size() < STARTV -1)  
+                param.insert(STARTV, val); 
+            else
+                param.append(" " + val);
+
+            qDebug()<< param;
+            mod+= param + "\n";
+
         }
         //pnum = param->
         flow += mod;

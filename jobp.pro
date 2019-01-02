@@ -1,4 +1,4 @@
- include (../geoseis.include)
+include (../geoseis.include)
 TEMPLATE = app
 QT += widgets
 QT += testlib
@@ -10,17 +10,18 @@ CONFIG += debug
 
 
 win32{
+SEA_SRC = E:\openseaseis_v2.03
     LIBS += -L$(GEOSEIS)/lib\        
          -lseageolib -lseasystem -lproperty -lprojectBase -lseamod
     INCLUDEPATH += .\
 	$(GEOSEIS)/include
 
     SOURCES += \
-      D:\openseaseis_v2.03\openseaseis_v2.03\src\cs\segy\csSegyHdrMap.cc\
-      D:\openseaseis_v2.03\openseaseis_v2.03\src\cs\system\csMethodRetriever.cc
+      $${SEA_SRC}\src\cs\segy\csSegyHdrMap.cc\
+      $${SEA_SRC}\src\cs\system\csMethodRetriever.cc
     HEADERS += \
-      D:\openseaseis_v2.03\openseaseis_v2.03\src\cs\segy\csSegyHdrMap.h\
-      D:\openseaseis_v2.03\openseaseis_v2.03\src\cs\system\csMethodRetriever.h
+      $${SEA_SRC}\src\cs\segy\csSegyHdrMap.h\
+      $${SEA_SRC}\src\cs\system\csMethodRetriever.h
 }
 !win32{
        LIBS += -L$(GEOSEIS)/lib \
