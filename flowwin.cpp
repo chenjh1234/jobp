@@ -412,7 +412,7 @@ void flowWin::mouseDoubleClickEvent ( QMouseEvent * event )
     y = event->y();
     
     l = items(x,y);
-    //qDebug()<< "start";
+    qDebug()<< "start";
 
     if(l.size()>0) 
     {
@@ -421,6 +421,7 @@ void flowWin::mouseDoubleClickEvent ( QMouseEvent * event )
         if(item !=NULL) 
         {
             str = item->getQName();
+            qDebug()<< "qname = " << str;
             //emit sigShowParam(item);
             emit sigModHelp(item->getQName());
         }

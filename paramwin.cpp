@@ -131,7 +131,7 @@ int paramWin::createProperty(csParamDef *pDef)
                // vname = " ";
             }
              
-#if 0
+#if 1
             qDebug() << "value name = " <<   valueDescriptor->name();
             qDebug() << "value type = " <<   valueDescriptor->type();
             qDebug() << "value desc = " <<   valueDescriptor->desc();
@@ -152,7 +152,7 @@ int paramWin::createProperty(csParamDef *pDef)
                 vv = vname; 
             else
                 vv = "";
-            vv = "" ;//leave the default to "", 
+           // vv = "" ;//leave the default to "", 
                      //when read flow file ,it will exactly mathch the text flow file.
             //qDebug() << "vv vname ="<<vv<<vname;
 
@@ -173,7 +173,7 @@ int paramWin::createProperty(csParamDef *pDef)
                      if (vname == optionDescriptor->name()) idx = io;
                  }
                  vv=strList;
-                 //qDebug() << "name =" << name << "m_mng = " << m_mng;
+                 qDebug() << "head,option,   name =" << name << "m_mng = " << m_mng << vv;
 
                  pt0 = m_mngE->addProperty( disName); 
                  m_mngE->setEnumNames(pt0, strList);
@@ -200,7 +200,7 @@ int paramWin::createProperty(csParamDef *pDef)
                  }
                  if (vv.isValid())  
                  {
-                     //qDebug() << "number = " <<name << " "<< vname << vv;
+                     qDebug() << "number = " <<name << " "<< vname << vv;
                      //m_mng->setValue(pt0, vv.toDouble()); 
                      m_mng->setValue(pt0, vv.toString());
                      pt0->setStatusTip(OPEN_CONSTANT);

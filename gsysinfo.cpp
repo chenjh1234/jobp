@@ -97,7 +97,7 @@ int gsysInfo::setModules()
     }
  
     name = pPath ;
-    name = name +  SLASH + "lib" ;
+    name = name +  SLASH +DIR_MOD ;
     strlist = findFiles((char *)name.c_str(), "libmod*.so");
     MPR2("size = %ld\n",strlist.size());
     int i,i1,i2;

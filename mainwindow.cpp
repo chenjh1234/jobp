@@ -1019,7 +1019,8 @@ QString MainWindow::strippedName(const QString &fullFileName)
 void MainWindow::slotParam2Str()
 {
     int i,num,pnum,vnum;
-    QString str,param,mod,flow,val,defstr;
+    QString str,param,mod,flow,val,defstr,pname,mname;
+    QStringList vlist;
     str = param = mod=flow = "";
     // def:
     i = 0;
@@ -1043,6 +1044,7 @@ void MainWindow::slotParam2Str()
     num = m_listParam.size();
     theApp->m_doc->m_inputData = "";
     theApp->m_doc->m_outputData = "";
+    // modules loop:
     for (i = 0; i <num ; i++)
     {
          
@@ -1055,6 +1057,7 @@ void MainWindow::slotParam2Str()
         //pnum :number of params in th module;
         //2015.6.24: modname must be uppercase
         mod = "$"+paramw->m_name.toUpper() + "\n";
+        mname = paramw->m_name;
         
         for (int pi = 0; pi < pnum ;pi++) 
         {
@@ -1063,6 +1066,7 @@ void MainWindow::slotParam2Str()
             qDebug() << "param index =" << pi << " paramname =" << pt->propertyName();
             qDebug() << "value 0 = " << pt->valueText();
             val = "";
+            pname = pt->propertyName();
             if (pt->propertyName() == "filename") 
             {
                 if (i == 0) // first module
@@ -1074,16 +1078,25 @@ void MainWindow::slotParam2Str()
                     theApp->m_doc->m_outputData = pt->valueText();
                 }
             }
-            param = " " + pt->propertyName(); 
+
+
+
             if (pt->valueText().length() != 0)  val = pt->valueText();
+
+            //vlist  = getParamDV(mnane,pname)
+
+            param = " " + pname; 
+
             if (param.size() < STARTV -1)  
-                param.insert(STARTV, pt->valueText()); 
+                param.insert(STARTV, val); 
             else
-                param.append(" " +  pt->valueText());
+                param.append(" " + val);
+
 
             listsp = pt->subProperties();
             //vnum :number of values in the parameter:
             vnum = listsp.size();
+            qDebug() << "num of vnum = "<<vnum;
             for (int vi = 0; vi < vnum; vi ++) 
             {
                 spt = listsp[vi];
