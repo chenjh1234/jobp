@@ -6,8 +6,8 @@
 #include <iostream>
 #define ORG_NAME "GEOSEIS"
 #define APP_NAME "flowPad"
-#define APP_VERSION "1.01"
-#define APP_DATE " 2015.07.3 "
+#define APP_VERSION "1.10"
+#define APP_DATE " 2019.01  "
 using namespace std;
 #define RUNJOB "runflow "
 #define SUBMITJOB "runflow "
@@ -20,7 +20,11 @@ using namespace std;
  *                  parameter: file project line,
  *       2015.8.18: leave the detault to "", match the text
  *       flow.
- * 
+ * 1.10:  2019.1: 
+ *       add :Mainwindow:  mapModPV ,getModParaDV 
+ *       change: slotParam2Str();
+ *       when create test flow,ingore the omit parameters, only
+ *       create the paramters that diffrence from the omit.
  * @author   (7/3/2015)
  */
 class flowDocument  
